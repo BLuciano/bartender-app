@@ -23,12 +23,14 @@ $(function(){
   var Bartender = function(name){
     this.name = name;
     this.questions = [];
+    this.preferences = [];
   };
 
   Bartender.prototype.addQuestion = function(question) {
     this.questions.push(question);
   };
 
+  //Displays the questions to the user
   Bartender.prototype.askQuestions = function() {
     var html = "";
     for (var i=0; i<this.questions.length; i++) {
@@ -39,6 +41,10 @@ $(function(){
     html+= "<input type='submit' value='Make a Drink!'>";
     $('.drinkForm').html(html);
   };
+
+  Bartender.prototype.addPreferences = function(preferences){
+    this.preferences.push(preferences);
+  }
 
   var joe = new Bartender("Joe");
   var drinkPantry = new Pantry("Drinks Pantry");
@@ -65,8 +71,28 @@ $(function(){
   var newIng = new Ingredient('fruity', ['Slice of orange', 'dash of cassis', 'cherry on top']);
   drinkPantry.addIngredient(newIng);
 
+  //Opens drinks questions form
   $('.order').click(function(){
-    preferences = joe.askQuestions();
+    joe.askQuestions();
     $('.drinkForm').show();
+  });
+
+  //Grabs users drink preferences and attaches them to bartender object
+  $('.drinkForm').submit(function(e){
+    e.preventDefault();
+    var pref = [];
+    var opts = $('.drinkForm input:checked');
+
+    $.each(opts, function(index, opt){
+      pref.push(opt.defaultValue);
+    });
+
+    if(pref.length === 0){
+      $(".message").html("Please select at least one option!");
+      return;
+    }
+    $(".message").html("");
+    $('.drinkForm').hide();
+    joe.addPreferences(pref);
   });
 });
