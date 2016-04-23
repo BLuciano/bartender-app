@@ -1,3 +1,75 @@
+html{
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  color: #444;
+  height: 100%;
+}
+
+body{
+  background: url(../imgs/tavern.jpg) no-repeat center center;
+  background-size: cover;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+h1{
+  font-size: 3em;
+}
+h2{
+  font-size: 2em;
+}
+
 .hidden{
-	display: none;
+  display: none;
+}
+
+.wrapper{
+  padding: 0 1em;
+  text-align: center;
+  color: #fff;
+}
+
+.buttons{
+  margin-top: 5em;
+}
+
+.button{
+  padding: 1em .5em;
+  margin: 0 .5em;
+  background-color: #222;
+  color: #fff;
+  border: none;
+  border-bottom: 2px solid #000;
+  border-right: 2px solid #000;
+  -webkit-transition: color .25s, border .10s;
+  transition: color .25s, border .10s;
+}
+
+.button:hover{
+  color: orange;
+}
+
+.button:focus{
+  outline: none;
+}
+
+.button:active{
+  border: none;
+}
+
+.message{
+  margin: 2em 0;
+}
+
+.name{
+  padding: 1em;
+  width: 300px;
+  margin: 0 auto;
+  display: block;
+}
+
+.nameBtn, .orderBtn{
+  margin-top: 1em;
 }

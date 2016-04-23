@@ -61,9 +61,9 @@ $(function(){
       for (var i=0; i<this.questions.length; i++) {
         html+= this.questions[i].question; 
         html+= " <input type='checkbox' class='option' name='preference'";
-        html+= "value='" + this.questions[i].property + "'/><br/>";
+        html+= "value='" + this.questions[i].property + "'/><br/><br/>";
       }
-      html+= "<input type='submit' value='Submit Order!'>";
+      html+= "<input type='submit' class='orderBtn button' value='Submit Order!'>";
       $('.qsForm').html(html);
     },
 
@@ -219,10 +219,17 @@ $(function(){
   $('.nameForm').submit(function(e){
     e.preventDefault();
     var item;
+    $('.message').html('');
     name = $('.name').val();
+    
+    if(name.length === 0){
+      $('.message').html("Please enter a name!");
+      return;
+    }
+
     $(this).hide();
     $('.name').val('');
-    
+
     if(worker === "chef"){
       item = chef.findCustomer(name);
       if(item){
