@@ -226,14 +226,14 @@ $(function(){
     if(worker === "chef"){
       item = chef.findCustomer(name);
       if(item){
-        chef.printOrder(item);
+        $('.message').html("Here is another " + item.name + " " + name);
         return; 
       }
     } 
     else if (worker === "bar"){
       item = bar.findCustomer(name);
       if(item){
-        bar.printOrder(item);
+        $('.message').html("Here is another " + item.name + " " + name);
         return;
       }
     }
