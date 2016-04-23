@@ -13,38 +13,71 @@ $(function(){
 
   var Pantry = function(name){
     this.name = name;
-    this.ingredients = [];
+    this.ingredients = {};
   };
 
-  Pantry.prototype.addIngredient = function(ingredient){
-    this.ingredients.push(ingredient);
+  Pantry.prototype = {
+    constructor : Pantry,
+
+    //Adds ingredients to the pantry
+    addIngredient : function(currIng){
+      this.ingredients[currIng.category] = currIng.ingredient;
+    },
+
+    //Grabs all possible ingredients and chooses three random ones.
+    getIngredients : function(preferences){
+      var currIngrs = [], finalIngrs = [];
+
+      for(var i = 0; i < preferences.length; i++){
+        currIngrs.push(this.ingredients[preferences[i]]);
+      }
+      currIngrs = currIngrs.join(',').split(',');
+
+      for(var i = 0; i<3; i++){
+        var num = Math.floor(Math.random() * currIngrs.length);
+        finalIngrs.push(currIngrs.splice(num, 1));
+      }
+      return finalIngrs;
+    }
   };
 
   var Bartender = function(name){
     this.name = name;
     this.questions = [];
-    this.preferences = [];
   };
 
-  Bartender.prototype.addQuestion = function(question) {
-    this.questions.push(question);
-  };
+  Bartender.prototype = {
+    constructor: Bartender,
+    
+    //Adds questions for the bartender to ask
+    addQuestion : function(question) {
+      this.questions.push(question);
+    },
 
-  //Displays the questions to the user
-  Bartender.prototype.askQuestions = function() {
-    var html = "";
-    for (var i=0; i<this.questions.length; i++) {
-      html+= this.questions[i].question; 
-      html+= " <input type='checkbox' class='option' name='preference'";
-      html+= "value='" + this.questions[i].property + "'/><br/>";
+    //Displays the questions to the user
+    askQuestions : function() {
+      var html = "";
+      for (var i=0; i<this.questions.length; i++) {
+        html+= this.questions[i].question; 
+        html+= " <input type='checkbox' class='option' name='preference'";
+        html+= "value='" + this.questions[i].property + "'/><br/>";
+      }
+      html+= "<input type='submit' value='Make a Drink!'>";
+      $('.drinkForm').html(html);
+    },
+
+    //Adds the current user preferences to be used to make drinks
+    addPreferences : function(preferences){
+      this.preferences = preferences;
+    },
+
+    //Creates a drink based on the preferences set by user
+    createDrink : function(pantry){
+      var drink = pantry.getIngredients(this.preferences);
+      drink.join('').split(',');
+      $('.message').html('<p>Your drink has the following ingredients: <br/>' + drink);
     }
-    html+= "<input type='submit' value='Make a Drink!'>";
-    $('.drinkForm').html(html);
   };
-
-  Bartender.prototype.addPreferences = function(preferences){
-    this.preferences.push(preferences);
-  }
 
   var joe = new Bartender("Joe");
   var drinkPantry = new Pantry("Drinks Pantry");
@@ -94,5 +127,6 @@ $(function(){
     $(".message").html("");
     $('.drinkForm').hide();
     joe.addPreferences(pref);
+    joe.createDrink(drinkPantry);
   });
 });
