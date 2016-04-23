@@ -1,5 +1,5 @@
 $(function(){
-  var preferences, worker;
+  var preferences, worker, name;
 
   var Question = function(question, property) {
     this.question = question;
@@ -44,6 +44,7 @@ $(function(){
   var Worker = function(name){
     this.name = name;
     this.questions = [];
+    this.customers = {};
   };
 
   Worker.prototype = {
@@ -70,6 +71,17 @@ $(function(){
     addPreferences : function(preferences){
       this.preferences = preferences;
     },
+
+    addCustomer : function(customer, item){
+      this.customers[customer] =  item;
+    },
+
+    findCustomer : function(customer){
+      if(this.customers.hasOwnProperty(customer)){
+        return this.customers[customer];
+      }
+      return false;
+    }
   };
   
   var Bartender = function(name){
@@ -96,6 +108,9 @@ $(function(){
       ingredients : pantry.getIngredients(this.preferences),
       name : this.nameDrink()
     };
+    //Add customer and preferred drink
+    this.customers[name] = drink;
+
     drink.ingredients = drink.ingredients.join(', ');
     $('.message').html('<p>The ' + drink.name + 
       ' has the following ingredients: <br/>' + drink.ingredients + '</p>');
@@ -125,6 +140,9 @@ $(function(){
       ingredients : pantry.getIngredients(this.preferences),
       name : this.nameBurger()
     };
+    //Add customer and preferred burger
+    this.customers[name] = burger;
+
     burger.ingredients = burger.ingredients.join(', ');
     $('.message').html('<p>The ' + burger.name + 
       ' has the following ingredients: <br/>' + burger.ingredients + '</p>');
@@ -180,10 +198,11 @@ $(function(){
 
   //Opens drinks questions form
   $('.orderDrink').click(function(){
-    worker = "bartender";
+    worker = "bar";
     bar.askQuestions();
     $(".message").html("");
-    $('.qsForm').show();
+    $('.qsForm').hide();
+    $(".nameForm").show();
   });
 
   //Opens burgers questions form
@@ -191,6 +210,33 @@ $(function(){
     worker = "chef";
     chef.askQuestions();
     $(".message").html("");
+    $('.qsForm').hide();
+    $(".nameForm").show();
+  });
+
+  //Enters name and checks if name exists already to retrieve item
+  $('.nameForm').submit(function(e){
+    e.preventDefault();
+    var item;
+    name = $('.name').val();
+    $(this).hide();
+    $('.name').val('');
+    
+    if(worker === "chef"){
+      item = chef.findCustomer(name);
+      if(item){
+        alert(item);
+        return; 
+      }
+    } 
+    else if (worker === "bar"){
+      item = bar.findCustomer(name);
+      if(item){
+        alert(item);
+        return;
+      }
+    }
+
     $('.qsForm').show();
   });
 
