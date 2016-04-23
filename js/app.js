@@ -81,6 +81,11 @@ $(function(){
         return this.customers[customer];
       }
       return false;
+    },
+
+    printOrder : function(item){
+      $('.message').html('<p>The ' + item.name + 
+        ' has the following ingredients: <br/>' + item.ingredients + '</p>');
     }
   };
   
@@ -110,10 +115,8 @@ $(function(){
     };
     //Add customer and preferred drink
     this.customers[name] = drink;
-
     drink.ingredients = drink.ingredients.join(', ');
-    $('.message').html('<p>The ' + drink.name + 
-      ' has the following ingredients: <br/>' + drink.ingredients + '</p>');
+    this.printOrder(drink);
   };
 
   var Chef = function(name){
@@ -142,10 +145,8 @@ $(function(){
     };
     //Add customer and preferred burger
     this.customers[name] = burger;
-
     burger.ingredients = burger.ingredients.join(', ');
-    $('.message').html('<p>The ' + burger.name + 
-      ' has the following ingredients: <br/>' + burger.ingredients + '</p>');
+    this.printOrder(burger);
   };
 
   var bar = new Bartender("bar");
@@ -225,14 +226,14 @@ $(function(){
     if(worker === "chef"){
       item = chef.findCustomer(name);
       if(item){
-        alert(item);
+        chef.printOrder(item);
         return; 
       }
     } 
     else if (worker === "bar"){
       item = bar.findCustomer(name);
       if(item){
-        alert(item);
+        bar.printOrder(item);
         return;
       }
     }
