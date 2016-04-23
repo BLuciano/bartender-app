@@ -74,7 +74,7 @@ $(function(){
     //Creates a drink based on the preferences set by user
     createDrink : function(pantry){
       var drink = pantry.getIngredients(this.preferences);
-      drink.join('').split(',');
+      drink = drink.join(', ');
       $('.message').html('<p>Your drink has the following ingredients: <br/>' + drink);
     }
   };
@@ -107,6 +107,7 @@ $(function(){
   //Opens drinks questions form
   $('.order').click(function(){
     joe.askQuestions();
+    $(".message").html("");
     $('.drinkForm').show();
   });
 
