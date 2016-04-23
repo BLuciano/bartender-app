@@ -9,10 +9,15 @@ body{
 	min-height: 100%;
 	background: url(../imgs/tavern.jpg) no-repeat center center;
   	background-size: cover;
+  	font-family: 'Boogaloo', cursive;
 }
 
 *, *:before, *:after {
   box-sizing: inherit;
+}
+
+h1, h2{
+	font-family: 'Kaushan Script', cursive;
 }
 
 h1{
@@ -67,6 +72,7 @@ h2{
 
 .message{
   margin: 2em 0;
+  font-size: 1.15em;
 }
 
 .name{
@@ -78,4 +84,8 @@ h2{
 
 .nameBtn, .orderBtn{
   margin-top: 1em;
+}
+
+.qsForm{
+	font-size: 1.10em;
 }
