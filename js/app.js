@@ -1,5 +1,5 @@
 $(function(){
-  var preferences;
+  var preferences, worker;
 
   var Question = function(question, property) {
     this.question = question;
@@ -63,7 +63,7 @@ $(function(){
         html+= "value='" + this.questions[i].property + "'/><br/>";
       }
       html+= "<input type='submit' value='Submit Order!'>";
-      $('.drinkForm').html(html);
+      $('.qsForm').html(html);
     },
 
     //Adds the current user preferences to be used to make the order
@@ -179,17 +179,26 @@ $(function(){
   pantry.addIngredient(newIng);
 
   //Opens drinks questions form
-  $('.order').click(function(){
+  $('.orderDrink').click(function(){
+    worker = "bartender";
     bar.askQuestions();
     $(".message").html("");
-    $('.drinkForm').show();
+    $('.qsForm').show();
+  });
+
+  //Opens burgers questions form
+  $('.orderBurger').click(function(){
+    worker = "chef";
+    chef.askQuestions();
+    $(".message").html("");
+    $('.qsForm').show();
   });
 
   //Grabs users drink preferences and attaches them to bartender object
-  $('.drinkForm').submit(function(e){
+  $('.qsForm').submit(function(e){
     e.preventDefault();
     var pref = [];
-    var opts = $('.drinkForm input:checked');
+    var opts = $('.qsForm input:checked');
 
     $.each(opts, function(index, opt){
       pref.push(opt.defaultValue);
@@ -200,8 +209,13 @@ $(function(){
       return;
     }
     $(".message").html("");
-    $('.drinkForm').hide();
-    bar.addPreferences(pref);
-    bar.createDrink(pantry);
+    $('.qsForm').hide();
+    if(worker === "chef"){
+      chef.addPreferences(pref);
+      chef.createBurger(pantry);
+    } else {
+      bar.addPreferences(pref);
+      bar.createDrink(pantry);
+    }
   });
 });
