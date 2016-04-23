@@ -66,6 +66,17 @@ $(function(){
       $('.drinkForm').html(html);
     },
 
+    nameDrink : function() {
+      var name = "";
+      var words = {
+        nouns : ['Parrot', 'Booty', 'Sea-Dog', 'Tides'],
+        adjs : ['Wicked', 'Infamous', 'Fluffy', 'Cruel']
+      }; 
+      name+= words.adjs[Math.floor(Math.random() * words.adjs.length)];
+      name+= " " + words.nouns[Math.floor(Math.random() * words.nouns.length)];
+      return name;
+    },
+
     //Adds the current user preferences to be used to make drinks
     addPreferences : function(preferences){
       this.preferences = preferences;
@@ -73,9 +84,13 @@ $(function(){
 
     //Creates a drink based on the preferences set by user
     createDrink : function(pantry){
-      var drink = pantry.getIngredients(this.preferences);
-      drink = drink.join(', ');
-      $('.message').html('<p>Your drink has the following ingredients: <br/>' + drink);
+      var drink = {
+        ingredients : pantry.getIngredients(this.preferences),
+        name : this.nameDrink()
+      };
+      drink.ingredients = drink.ingredients.join(', ');
+      $('.message').html('<p>The ' + drink.name + 
+        ' has the following ingredients: <br/>' + drink.ingredients + '</p>');
     }
   };
 
