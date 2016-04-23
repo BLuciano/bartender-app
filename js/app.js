@@ -41,15 +41,15 @@ $(function(){
     }
   };
 
-  var Bartender = function(name){
+  var Worker = function(name){
     this.name = name;
     this.questions = [];
   };
 
-  Bartender.prototype = {
-    constructor: Bartender,
+  Worker.prototype = {
+    constructor: Worker,
     
-    //Adds questions for the bartender to ask
+    //Adds questions
     addQuestion : function(question) {
       this.questions.push(question);
     },
@@ -62,66 +62,125 @@ $(function(){
         html+= " <input type='checkbox' class='option' name='preference'";
         html+= "value='" + this.questions[i].property + "'/><br/>";
       }
-      html+= "<input type='submit' value='Make a Drink!'>";
+      html+= "<input type='submit' value='Submit Order!'>";
       $('.drinkForm').html(html);
     },
 
-    nameDrink : function() {
-      var name = "";
-      var words = {
-        nouns : ['Parrot', 'Booty', 'Sea-Dog', 'Tides'],
-        adjs : ['Wicked', 'Infamous', 'Fluffy', 'Cruel']
-      }; 
-      name+= words.adjs[Math.floor(Math.random() * words.adjs.length)];
-      name+= " " + words.nouns[Math.floor(Math.random() * words.nouns.length)];
-      return name;
-    },
-
-    //Adds the current user preferences to be used to make drinks
+    //Adds the current user preferences to be used to make the order
     addPreferences : function(preferences){
       this.preferences = preferences;
     },
-
-    //Creates a drink based on the preferences set by user
-    createDrink : function(pantry){
-      var drink = {
-        ingredients : pantry.getIngredients(this.preferences),
-        name : this.nameDrink()
-      };
-      drink.ingredients = drink.ingredients.join(', ');
-      $('.message').html('<p>The ' + drink.name + 
-        ' has the following ingredients: <br/>' + drink.ingredients + '</p>');
-    }
+  };
+  
+  var Bartender = function(name){
+    Worker.call(this, name);
+  };
+  Bartender.prototype = Object.create(Worker.prototype);
+  Bartender.prototype.constructor = Bartender;
+  
+  //Names the drink from a random selection of nouns and adjs
+  Bartender.prototype.nameDrink = function() {
+    var name = "";
+    var words = {
+      nouns : ['Parrot', 'Booty', 'Sea-Dog', 'Tides'],
+      adjs : ['Wicked', 'Infamous', 'Fluffy', 'Cruel']
+    }; 
+    name+= words.adjs[Math.floor(Math.random() * words.adjs.length)];
+    name+= " " + words.nouns[Math.floor(Math.random() * words.nouns.length)];
+    return name;
   };
 
-  var joe = new Bartender("Joe");
-  var drinkPantry = new Pantry("Drinks Pantry");
+  //Creates a drink based on the preferences set by user
+  Bartender.prototype.createDrink = function(pantry){
+    var drink = {
+      ingredients : pantry.getIngredients(this.preferences),
+      name : this.nameDrink()
+    };
+    drink.ingredients = drink.ingredients.join(', ');
+    $('.message').html('<p>The ' + drink.name + 
+      ' has the following ingredients: <br/>' + drink.ingredients + '</p>');
+  };
+
+  var Chef = function(name){
+    Worker.call(this, name);
+  };
+  Chef.prototype = Object.create(Worker.prototype);
+  Chef.prototype.constructor = Chef;
+
+  //Names the drink from a random selection of nouns and adjs
+  Chef.prototype.nameBurger = function() {
+    var name = "";
+    var words = {
+      nouns : ['Buccaneer', 'Buns', 'Monkey', 'Plank'],
+      adjs : ['Wicked', 'Juicy', 'Bloody', 'Gooey']
+    }; 
+    name+= words.adjs[Math.floor(Math.random() * words.adjs.length)];
+    name+= " " + words.nouns[Math.floor(Math.random() * words.nouns.length)];
+    return name;
+  };
+
+  //Creates a burger based on the preferences set by user
+  Chef.prototype.createBurger = function(pantry){
+    var burger = {
+      ingredients : pantry.getIngredients(this.preferences),
+      name : this.nameBurger()
+    };
+    burger.ingredients = burger.ingredients.join(', ');
+    $('.message').html('<p>The ' + burger.name + 
+      ' has the following ingredients: <br/>' + burger.ingredients + '</p>');
+  };
+
+  var bar = new Bartender("bar");
+  var chef = new Chef("chef");
+  var pantry = new Pantry("pantry");
 
   var newQ = new Question('Do ye like yer drinks strong?', 'strong');
-  joe.addQuestion(newQ);
+  bar.addQuestion(newQ);
   var newQ = new Question('Do ye like it with a salty tang?', 'salty');
-  joe.addQuestion(newQ);
+  bar.addQuestion(newQ);
   var newQ = new Question('Are ye a lubber who likes it bitter?', 'bitter');
-  joe.addQuestion(newQ);
+  bar.addQuestion(newQ);
   var newQ = new Question('Would ye like a bit of sweetness with yer poison?', 'sweet');
-  joe.addQuestion(newQ);
+  bar.addQuestion(newQ);
   var newQ = new Question('Are ye one for a fruity finish?', 'fruity');
-  joe.addQuestion(newQ);
+  bar.addQuestion(newQ);
+
+  var newQ = new Question('Do ye like yer burgers cheesy?', 'cheese');
+  chef.addQuestion(newQ);
+  var newQ = new Question('Do ye like it with a saucy tang?', 'sauce');
+  chef.addQuestion(newQ);
+  var newQ = new Question('Are ye a lubber who likes it spicy?', 'spicy');
+  chef.addQuestion(newQ);
+  var newQ = new Question('Do ye like yer burgers greasy?', 'greasy');
+  chef.addQuestion(newQ);
+  var newQ = new Question('Are ye one for a veggy finish?', 'veggies');
+  chef.addQuestion(newQ);
+
+  var newIng = new Ingredient('cheese', ['Pepperjack', 'Provolone', 'Mozzarella']);
+  pantry.addIngredient(newIng);
+  var newIng = new Ingredient('sauce', ['Mayo', 'BBQ', 'Mustard']);
+  pantry.addIngredient(newIng);
+  var newIng = new Ingredient('spicy', ['Jalapenos', 'chipotle', 'Habanero']);
+  pantry.addIngredient(newIng);
+  var newIng = new Ingredient('greasy', ['Bacon', 'Eggs', 'Double Patty']);
+  pantry.addIngredient(newIng);
+  var newIng = new Ingredient('veggies', ['Lettuce', 'Onions', 'Tomatoes']);
+  pantry.addIngredient(newIng);
 
   var newIng = new Ingredient('strong', ['Glug of rum', 'slug of whisky', 'splash of gin']);
-  drinkPantry.addIngredient(newIng);
+  pantry.addIngredient(newIng);
   var newIng = new Ingredient('salty', ['Olive on a stick', 'salt-dusted rim', 'rasher of bacon']);
-  drinkPantry.addIngredient(newIng);
+  pantry.addIngredient(newIng);
   var newIng = new Ingredient('bitter', ['Shake of bitters', 'splash of tonic', 'twist of lemon peel']);
-  drinkPantry.addIngredient(newIng);
+  pantry.addIngredient(newIng);
   var newIng = new Ingredient('sweet', ['Sugar cube', 'spoonful of honey', 'splash of cola']);
-  drinkPantry.addIngredient(newIng);
+  pantry.addIngredient(newIng);
   var newIng = new Ingredient('fruity', ['Slice of orange', 'dash of cassis', 'cherry on top']);
-  drinkPantry.addIngredient(newIng);
+  pantry.addIngredient(newIng);
 
   //Opens drinks questions form
   $('.order').click(function(){
-    joe.askQuestions();
+    bar.askQuestions();
     $(".message").html("");
     $('.drinkForm').show();
   });
@@ -142,7 +201,7 @@ $(function(){
     }
     $(".message").html("");
     $('.drinkForm').hide();
-    joe.addPreferences(pref);
-    joe.createDrink(drinkPantry);
+    bar.addPreferences(pref);
+    bar.createDrink(pantry);
   });
 });
